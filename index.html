@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+    <title>Wir &uuml;ben das Runden von nat&uuml;rlichen Zahlen</title>
+    <style type="text/css">
+        .error {
+            width:200px;
+            height:auto;
+            position:absolute;
+            left:50%;
+            margin-left:-100px;
+            bottom:10px;
+            background-color: #383838;
+            color: #F0F0F0;
+            font-size: 20px;
+            padding:10px;
+            text-align:center;
+            border-radius: 2px;
+            -webkit-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+            -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+            box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row" style="margin-top: 3em">
+        <div class="col">
+            <h1>Runden von nat&uuml;rlichen Zahlen</h1>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputNumber" class="col-sm-6 col-form-label" id="inputNumberLabel" >Password</label>
+        <div class="col-sm-5">
+            <input type="text" class="form-control is-valid" id="inputNumber" placeholder="" >
+        </div>
+        <div class="col-sm-1">
+            <i id="inputok" class="fas fa-check" style="color: green; font-size: 2em"></i>
+            <i id="inputnok" class="far fa-times-circle" style="color: red; font-size: 2em"></i>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <a class="btn btn-primary btn-block" href="javascript:update()" role="button">N&auml;chste Zahl</a>
+        </div>
+    </div>
+    <div class='error' id="toast" >Bitte verwende eine andere Zahl!</div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="js/bootstrap.bundle.js"></script>
+<script language="JavaScript">
+    var currentNumber = Math.round(Math.random() * 10000000);
+    var currentStelle = 10;
+    var stelle     = new Array(10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000)
+    var stelleText = new Array('Zehner', 'Hunderter', 'Tausender', 'Zehntausender', 'Hunderttausender', 'Millionen', '10M', '100M', 'Milliarden')
+
+    var questionType = 1;
+
+    function update() {
+        var stellenIndex = Math.floor(Math.random()*stelle.length);
+        currentStelle = stelle[stellenIndex];
+        var i = Math.floor(Math.random() * (stelle.length-stellenIndex) + stellenIndex);
+        var maxNum = stelle[i]*10;
+        currentNumber = Math.round(Math.random() * maxNum);
+        if (Math.random() < 0.5) questionType = 1;
+        else questionType = 2;
+        if (questionType == 1)
+            var labelString = "Runde die Zahl " + currentNumber.toLocaleString('de-DE') + " auf " + stelleText[stellenIndex];
+        if (questionType == 2)
+            var labelString = "Welche Zahl ergibt gerundet auf " + stelleText[stellenIndex] + ' ' +  (Math.round(currentNumber/currentStelle)*currentStelle).toLocaleString('de-DE') + '?';
+
+        $('#inputNumberLabel').text(labelString);
+        $('#inputNumber').val("");
+        $('#inputnok').hide();
+        $('#inputok').hide();
+        $('#toast').hide();
+    }
+
+    $( document ).ready(function() {
+        console.log( "ready!" );
+        update();
+    });
+
+    function check() {
+        var num = $('#inputNumber').val().replace(/ /g, '');
+        var roundedResult = Math.round(currentNumber / currentStelle);
+        if (questionType == 1) {
+            if ((num / currentStelle) == roundedResult) {
+                console.log(Math.round(num / currentStelle) + " <-> " + roundedResult + " correct");
+                $('#inputNumber').removeClass("is-invalid").addClass("is-valid");
+                $('#inputok').show();
+            } else {
+                $('#inputNumber').removeClass("is-valid").addClass("is-invalid");
+                $('#inputok').hide();
+            }
+        } else if (questionType == 2) {
+            if (Math.round(num / currentStelle) == roundedResult && num !=  roundedResult*currentStelle ) {
+                console.log(Math.round(num / currentStelle) + " <-> " + roundedResult + " correct");
+                $('#inputNumber').removeClass("is-invalid").addClass("is-valid");
+                $('#inputok').show();
+                $('#toast').hide();
+            } else {
+                $('#inputNumber').removeClass("is-valid").addClass("is-invalid");
+                $('#inputok').hide();
+                $('#toast').hide();
+            }
+            if (num ==  roundedResult*currentStelle) {
+                $('#toast').show();
+            }
+        }
+    }
+
+    $('#inputNumber').keyup(check)
+</script>
+</body>
+</html>
