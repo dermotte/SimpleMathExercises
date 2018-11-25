@@ -73,7 +73,7 @@
         var i = Math.floor(Math.random() * (stelle.length-stellenIndex) + stellenIndex);
         var maxNum = stelle[i]*10;
         currentNumber = Math.round(Math.random() * maxNum);
-        if (Math.random() < 0.5) questionType = 1;
+        if (Math.random() < 0.7) questionType = 1;
         else questionType = 2;
         if (questionType == 1)
             var labelString = "Runde die Zahl " + currentNumber.toLocaleString('de-DE') + " auf " + stelleText[stellenIndex];
@@ -111,6 +111,7 @@
                 $('#inputok').show();
                 $('#toast').hide();
             } else {
+                console.log(Math.round(num / currentStelle) + " <-> " + roundedResult + " incorrect");
                 $('#inputNumber').removeClass("is-valid").addClass("is-invalid");
                 $('#inputok').hide();
                 $('#toast').hide();
